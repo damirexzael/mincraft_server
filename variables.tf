@@ -32,7 +32,7 @@ variable "vpc_cidr" {
 }
 
 # /* variables to inject via terraform.tfvars */
-# variable "aws_region" {}
+variable "elastic_ip_allocation_id" {}
 # variable "aws_account_id" { }
 # variable "aws_profile" {}
 # variable "test_user" {}

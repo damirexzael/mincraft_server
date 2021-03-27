@@ -106,28 +106,7 @@ resource "aws_instance" "instance_connect" {
   tags        = merge(map("Name","instance_connect"), var.tags)
   volume_tags = merge(map("Name","instance_connect"), var.tags)
 
-  user_data = <<EOF
-#!/bin/bash
-sudo yum update -y -q
-yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-yum-config-manager --disable docker-ce-stable
-yum install docker -y
-systemctl start docker
-systemctl enable docker
-mkdir /home/ec2-user/data
-mkfs -t xfs /dev/xvdh
-mount /dev/xvdh /home/ec2-user/data
-docker create \
-        -p 25565:25565 \
-        --name minecraft \
-        -e EULA=TRUE \
-        -e VERSION=SNAPSHOT \
-        -e ONLINE_MODE=false \
-        -e MEMORY=1024m \
-        -v "/home/ec2-user/data:/data" \
-        itzg/minecraft-server
-docker start minecraft
-EOF
+  user_data = file("install_minecraft.sh")
 }
 
 resource "aws_volume_attachment" "minecraft_volume_attachment" {
@@ -171,4 +150,10 @@ resource "aws_iam_policy_attachment" "instance_connect" {
   name       = "instance-connect"
   users      = ["damirexzael"]
   policy_arn = aws_iam_policy.instance_connect.arn
+}
+
+# associate own elastic IP
+resource "aws_eip_association" "eip_assoc" {
+  instance_id   = aws_instance.instance_connect.id
+  allocation_id = var.elastic_ip_allocation_id
 }
