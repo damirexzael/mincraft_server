@@ -1,5 +1,10 @@
 # mincraft_server
 
+Create a Minecraft server that stop the 
+instance after 30 min with zero players online.
+Also, create a Alexa lambda skill for check,
+start and stop the minecraft instance.
+
 Links:
 
 https://github.com/itzg/docker-minecraft-server
@@ -12,7 +17,12 @@ Run local minecraft using docker-compose
 
 # Pre install
  
-1. Create elastic IP address this assigned and use this 
+1. Create [elastic IP address](https://console.aws.amazon.com/vpc/home?region=us-east-1#Addresses:).
+
+2. Zip data and save file in `/tmp/lambda_minecraft.zip`.
+
+    
+    bash -x zip_lambda.sh
 
 # Install
 
@@ -41,6 +51,21 @@ Run local minecraft using docker-compose
 
     
     sudo docker ps
+
+# Post Install (ALexa Skill)
+
+Create [Alexa Skill](https://developer.amazon.com/alexa/console/ask) 
+as `Minecraft Server`.
+
+1. Choose a model to add to your skill: Custom
+2. Choose a method to host your skill's backend resources : Provisioner your own 
+3. Choose a template to add to your skill: Fact Skill
+4. Skill Invocation Name: Minecraft Server.
+5. Intents -> JSON Editor: Copy lambda_minecraft/skill.json
+6. Save Model and build the model
+7. Endpoint: Copy aws_lambda_function_arn
+8. Save endpoint
+9. 
 
 # Backup minecraft world
 
@@ -93,6 +118,8 @@ Run local minecraft using docker-compose
 
     
     terraform destroy
+    
+3. Remove Alexa Skill `Minecraft Server`.
 
 
 # Others
