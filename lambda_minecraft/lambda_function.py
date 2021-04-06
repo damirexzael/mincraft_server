@@ -6,8 +6,6 @@
 # This sample is built using the handler classes approach in skill builder.
 import logging
 import ask_sdk_core.utils as ask_utils
-import boto3
-import os
 
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
@@ -16,11 +14,10 @@ from ask_sdk_core.handler_input import HandlerInput
 
 from ask_sdk_model import Response
 
+from instance_manager import InstanceManager
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-INSTANCE_ID = os.environ['INSTANCE_ID']
-ec2 = boto3.client('ec2')
 
 
 class LaunchRequestHandler(AbstractRequestHandler):
@@ -33,13 +30,14 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "Welcome, you can say Server Status or Help. Which would you like to try?"
+        speak_output = "Welcome, you can say Server Status, Start Server, Stop Server or Help. " \
+                       "Which would you like to try?"
 
         return (
             handler_input.response_builder
-                .speak(speak_output)
-                .ask(speak_output)
-                .response
+            .speak(speak_output)
+            .ask(speak_output)
+            .response
         )
 
 
@@ -52,21 +50,58 @@ class ServerStatusIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        response = ec2.describe_instance_status(
-            InstanceIds=[INSTANCE_ID],
-            IncludeAllInstances=True
-        )
 
-        instance_state = response['InstanceStatuses'][0]['InstanceState']['Name']
-        instance_status = response['InstanceStatuses'][0]['InstanceStatus']['Status']
-
-        speak_output = f'Server state is {instance_state} with status {instance_status}'
+        speak_output, _, _, _ = InstanceManager.status()
 
         return (
             handler_input.response_builder
-                .speak(speak_output)
-                # .ask("add a reprompt if you want to keep the session open for the user to respond")
-                .response
+            .speak(speak_output)
+            # .ask("add a reprompt if you want to keep the session open for the user to respond")
+            .response
+        )
+
+
+class StartServerIntentHandler(AbstractRequestHandler):
+    """Handler for Start Server Intent."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("StartServerIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        InstanceManager.start()
+
+        speak_output = "The minecraft server is starting."
+
+        return (
+            handler_input.response_builder
+            .speak(speak_output)
+            # .ask("add a reprompt if you want to keep the session open for the user to respond")
+            .response
+        )
+
+
+class StopServerIntentHandler(AbstractRequestHandler):
+    """Handler for Stop Server Intent."""
+
+    def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        return ask_utils.is_intent_name("StopServerIntent")(handler_input)
+
+    def handle(self, handler_input):
+        # type: (HandlerInput) -> Response
+
+        InstanceManager.stop()
+
+        speak_output = "The minecraft server is stopping."
+
+        return (
+            handler_input.response_builder
+            .speak(speak_output)
+            # .ask("add a reprompt if you want to keep the session open for the user to respond")
+            .response
         )
 
 
@@ -79,13 +114,13 @@ class HelpIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        speak_output = "You can say Server Status! How can I help?"
+        speak_output = "You can say Server Status, Start Server or Stop Server! How can I help?"
 
         return (
             handler_input.response_builder
-                .speak(speak_output)
-                .ask(speak_output)
-                .response
+            .speak(speak_output)
+            .ask(speak_output)
+            .response
         )
 
 
@@ -180,6 +215,8 @@ sb = SkillBuilder()
 
 sb.add_request_handler(LaunchRequestHandler())
 sb.add_request_handler(ServerStatusIntentHandler())
+sb.add_request_handler(StartServerIntentHandler())
+sb.add_request_handler(StopServerIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())

@@ -26,6 +26,24 @@
                         "server status",
                         "status"
                     ]
+                },
+                {
+                    "name": "StartServerIntent",
+                    "slots": [],
+                    "samples": [
+                        "start server",
+                        "start",
+                        "initialize",
+                        "initialize server"
+                    ]
+                },
+                {
+                    "name": "StopServerIntent",
+                    "slots": [],
+                    "samples": [
+                        "stop server",
+                        "stop"
+                    ]
                 }
             ],
             "types": []

@@ -19,10 +19,6 @@ Run local minecraft using docker-compose
  
 1. Create [elastic IP address](https://console.aws.amazon.com/vpc/home?region=us-east-1#Addresses:).
 
-2. Zip data and save file in `/tmp/lambda_minecraft.zip`.
-
-    
-    bash -x zip_lambda.sh
 
 # Install
 

@@ -71,7 +71,7 @@ resource "aws_security_group" "instance_connect" {
 
 resource "aws_key_pair" "minecraft_key_pair" {
   key_name   = "deployer-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDe/BnG948G21Fid1tWGkrefmvyV4q71pjjW5Kgkde+t6Sd1vOu/RnVHYHsCZ4KNrns9p3HiKo1TV2k842pD5YPzjK32eEpFxfDnYzc6uD8rJVQJtcSOkHfwZNn9BXY3IgiRqo1zGaiG8qqdnf6S02YBsV6EoahV2hQUHBvPmuAUV51DSh8JhDNZ3Cblgu17HkOiXTOer+2AwVTJ8SufjAuk2KcMy/omTV5/6xDLZR1Ja6Gyy6e21DiT5EDLCPmL5qUd8sbiYZ2X+42DQDnBwxqFyuBWFtuCN+ufD/uhn7ml+udgll+T9WGIegEq/t3ZW+5d70A34BOAf7qozDR1YJVkosHMfZhZYff3se4t7CK402xZjNCM2NFog2j9AmFLjw3uVHe9mql8fp9dulqodawE+P9CRCANqilhm+8XSHF2bmL82wUDXzCOOSkQPXaDghlIh9m+updqwNMTGOVl462J72qIxAICBQNxPby9f/8nediIpv3eAG44bcGGP9Kdzk= damiraliquintui@damirs-MacBook-Pro.local"
+  public_key = file("connection/minecraft.pub")
 }
 
 resource "aws_ebs_volume" "minecraft_data" {
@@ -93,11 +93,6 @@ resource "aws_instance" "instance_connect" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.minecraft_key_pair.key_name
   availability_zone = "us-east-1a"
-
-  #root_block_device = {
-  #  volume_type = "standard"
-  #  volume_size = 8
-  #}
 
   vpc_security_group_ids = [aws_security_group.instance_connect.id]
 
