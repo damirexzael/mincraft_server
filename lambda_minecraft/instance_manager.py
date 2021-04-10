@@ -31,6 +31,6 @@ class InstanceManager:
 
     @staticmethod
     def stop():
-        ec2.start_instances(
+        ec2.stop_instances(
             InstanceIds=[INSTANCE_ID]
         )

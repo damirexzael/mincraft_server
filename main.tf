@@ -88,7 +88,7 @@ resource "aws_ebs_volume" "minecraft_data" {
 # ------------------------------------------------------------------------------
 resource "aws_instance" "instance_connect" {
   ami                         = data.aws_ami.target_ami.id
-  instance_type               = "t2.small"
+  instance_type               = "t2.xlarge"
   subnet_id                   = aws_subnet.instance_connect.id
   associate_public_ip_address = true
   key_name                    = aws_key_pair.minecraft_key_pair.key_name

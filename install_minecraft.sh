@@ -14,7 +14,7 @@ docker create \
         -e EULA=TRUE \
         -e VERSION=SNAPSHOT \
         -e ONLINE_MODE=false \
-        -e MEMORY=1024m \
+        -e MEMORY=6144m \
         -v "/home/ec2-user/data:/data" \
         --restart unless-stopped \
         itzg/minecraft-server
