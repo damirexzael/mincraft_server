@@ -20,7 +20,7 @@ data "aws_ami" "target_ami" {
 variable "tags" {
   type = map
   default = {
-    "Owner"   = "robert"
+    "Owner"   = "minecraft"
     "Project" = "instance-connect"
     "Client"  = "internal"
   }
@@ -28,7 +28,7 @@ variable "tags" {
 
 # 172.33.0.0 - 172.33.255.255
 variable "vpc_cidr" {
-  default = "172.33.0.0/16"
+  default = "10.0.0.0/24"
 }
 
 # /* variables to inject via terraform.tfvars */
@@ -42,5 +42,5 @@ variable "elastic_ip_allocation_id" {}
 # -----------------------------------------------------------------------------
 variable "ssh_list" {
   type = list
-  default = [ "0.0.0.0/0", "0.0.0.0/0" ]
+  default = [ "0.0.0.0/0" , "::/0"]
 }

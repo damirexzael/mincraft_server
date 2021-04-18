@@ -38,33 +38,26 @@ resource "aws_iam_instance_profile" "instance_connect" {
 resource "aws_security_group" "instance_connect" {
   vpc_id      = aws_vpc.instance_connect.id
   name_prefix = "instance_connect"
-  description = "allow ssh"
+  description = "instance_connect_sg"
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = var.ssh_list
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-  from_port   = 25565
-  to_port     = 25565
-  protocol    = "tcp"
-  cidr_blocks = var.ssh_list
-  }
-
-  egress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 25565
+    to_port     = 25565
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -88,7 +81,7 @@ resource "aws_ebs_volume" "minecraft_data" {
 # ------------------------------------------------------------------------------
 resource "aws_instance" "instance_connect" {
   ami                         = data.aws_ami.target_ami.id
-  instance_type               = "t2.small"
+  instance_type               = "t2.xlarge"
   subnet_id                   = aws_subnet.instance_connect.id
   associate_public_ip_address = true
   key_name                    = aws_key_pair.minecraft_key_pair.key_name
