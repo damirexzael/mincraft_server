@@ -27,10 +27,10 @@ Run local minecraft using docker-compose
 
     ssh-keygen -t rsa -f connection/minecraft
     
-2. Copy rsa.pub in resource "aws_key_pair" "minecraft_key_pair" -> public_key
+2. Create zip of lambda function
 
 
-    cat connection/minecraft.pub
+    cd lambda_minecraft && zip -FSr /tmp/lambda_minecraft.zip . & cd ..
     
 3. Run terraform
 

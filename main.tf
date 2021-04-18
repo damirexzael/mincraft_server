@@ -44,14 +44,28 @@ resource "aws_security_group" "instance_connect" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = var.ssh_list
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-  from_port   = 25565
-  to_port     = 25565
-  protocol    = "tcp"
-  cidr_blocks = var.ssh_list
+    from_port   = 25565
+    to_port     = 25565
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 8
+    to_port = 0
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 8
+    to_port = 0
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
