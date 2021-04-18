@@ -40,3 +40,29 @@ resource "aws_route_table_association" "instance_connect" {
   subnet_id      = aws_subnet.instance_connect.id
   route_table_id = aws_default_route_table.instance_connect.id
 }
+
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.instance_connect.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 25565
+    to_port     = 25565
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+

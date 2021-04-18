@@ -133,6 +133,7 @@ connection/
 
 .terraform/
 .terraform.*
+..terraform.*
+terraform.*
 
 .idea/
-terraform.*
